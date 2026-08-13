@@ -7,7 +7,7 @@ Prototype for an unauthenticated AI Skills Navigator conversation landing page.
 - A production-aligned AI Skills Navigator header and legal footer.
 - Responsive conversation lanes with playlist and session cards.
 - Mobile disclosure behavior and desktop content grids.
-- Light and dark Scout theme support through the `scoutTheme` query parameter.
+- The same light visual theme used by AI Skills Navigator.
 
 ## Run locally
 
