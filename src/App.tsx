@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { executivePage, type Destination, type LearningItem } from "./data/executive";
+import { executivePage, type Destination, type LearningItem, type LearningLane } from "./data/executive";
 import { buildAsnUrl, isAvailableDestination } from "./utils/urls";
 
 const annotations = [
-  { target: "#learning", title: "Featured playlists", detail: "Four featured playlists use production learning thumbnails and direct ASN handoffs." },
+  { target: "#learning", title: "Curated learning", detail: "Two production-named ASN playlists contain verified catalog handoffs." },
   { target: "#editorial", title: "Editorial feature", detail: "A replaceable timely feature driven entirely by the content model." },
   { target: "#readiness", title: "Readiness checklist", detail: "A non-interactive prompt list with no scoring, storage, forms, or data capture." },
   { target: "#credential", title: "Featured offer", detail: "The verified AI Transformation Leader credential destination." },
@@ -40,15 +40,29 @@ function TrackedAsnLink({ destination, content, children, ...props }: {
   return <a {...props} href={buildAsnUrl(destination, executivePage.slug, content)}>{children}</a>;
 }
 
-function LearningCard({ item, index }: { item: LearningItem; index: number }) {
+function LearningCard({ item, laneId, index }: { item: LearningItem; laneId: string; index: number }) {
   return (
     <article className="learning-card">
       <img className="learning-thumbnail" src={item.thumbnail} alt="" />
       <div className="learning-card-body">
         <h3>{item.title}</h3>
-        <ActionLink className="text-cta" content={`featured_learning_${index + 1}`} destination={item.destination} label="View playlist" />
+        <ActionLink className="text-cta" content={`${laneId}_${index + 1}`} destination={item.destination} label="View learning" />
       </div>
     </article>
+  );
+}
+
+function LearningLane({ lane }: { lane: LearningLane }) {
+  return (
+    <section className="playlist-lane" id={lane.id} aria-labelledby={`${lane.id}-heading`}>
+      <div className="playlist-lane-heading">
+        <h3 id={`${lane.id}-heading`}>{lane.heading}</h3>
+        <p>{lane.introduction}</p>
+      </div>
+      <div className="learning-grid">
+        {lane.items.map((item, index) => <LearningCard item={item} laneId={lane.id} index={index} key={item.title} />)}
+      </div>
+    </section>
   );
 }
 
@@ -191,9 +205,7 @@ function App() {
               <h2 id="learning-heading">{executivePage.learningSection.heading}</h2>
               <p>{executivePage.learningSection.introduction}</p>
             </div>
-            <div className="learning-grid">
-              {executivePage.learningItems.map((item, index) => <LearningCard item={item} index={index} key={item.title} />)}
-            </div>
+            {executivePage.learningLanes.map((lane) => <LearningLane lane={lane} key={lane.id} />)}
           </section>
 
           <EditorialFeature />

@@ -5,7 +5,14 @@ export type Destination = string | typeof TODO_DESTINATION;
 export type LearningItem = {
   title: string;
   thumbnail: string;
-  destination: Destination;
+  destination: string;
+};
+
+export type LearningLane = {
+  id: string;
+  heading: string;
+  introduction: string;
+  items: LearningItem[];
 };
 
 export const executivePage = {
@@ -27,32 +34,65 @@ export const executivePage = {
   },
   supportingCopy: "No technical background required. Sign in when you’re ready to start learning.",
   learningSection: {
-    heading: "Featured playlists",
-    introduction:
-      "Explore curated playlists selected to build practical AI knowledge and help turn ideas into action.",
+    heading: "Curated AI learning",
+    introduction: "Explore two hand-picked playlists from AI Skills Navigator.",
   },
-  learningItems: [
+  learningLanes: [
     {
-      title: "Generative AI for Business Leaders",
-      thumbnail: "https://media.licdn.com/dms/image/v2/D560DAQGYvQ-OAeyO7Q/learning-public-crop_288_512/learning-public-crop_288_512/0/1697135680957?e=2147483647&v=beta&t=Uy-QahZpAKdD8K4knafIoEbTtCNfI1Euij-7h-3qef8",
-      destination: TODO_DESTINATION,
+      id: "ai-essentials",
+      heading: "AI Essentials for Business Impact",
+      introduction: "Build baseline knowledge on leading organizational AI advancement.",
+      items: [
+        {
+          title: "Leading Responsible AI in Organizations",
+          thumbnail: "https://media.licdn.com/dms/image/v2/D4D0DAQGAzr3RwcnrGg/learning-public-crop_288_512/learning-public-crop_288_512/0/1707874444981?e=2147483647&v=beta&t=0dHb-cHyuuzfHITeWBBDpxFFbApU2Mi-vQaubZtwS4o",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/course-ac51184fe7a0580226b225237b38e37f3b2b5184f6e8cda7f3b1942d2759a123",
+        },
+        {
+          title: "Embrace responsible AI principles and practices",
+          thumbnail: "https://learn.microsoft.com/training/achievements/embrace-responsible-ai-principles-practices.svg",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/module-e2915f242de9e7469267c79e6854ec043fce42defe80e6cf22e57205fe87a8d6",
+        },
+        {
+          title: "Generative AI for Business Leaders",
+          thumbnail: "https://media.licdn.com/dms/image/v2/C4D0DAQHsCAbXLw-NOw/learning-public-crop_288_512/learning-public-crop_288_512/0/1678753390059?e=2147483647&v=beta&t=ttFyJOm1yoIp0N3bkjYXdgpbu7Xt_q-iMv-bdfuOJVk",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/course-004fb2b6b81818d0c733f3cf2431d667f16fe3dec16b9655802b354e1a8ea0e6",
+        },
+        {
+          title: "AI Challenges and Opportunities for Leadership",
+          thumbnail: "https://media.licdn.com/dms/image/v2/D560DAQGYvQ-OAeyO7Q/learning-public-crop_288_512/learning-public-crop_288_512/0/1697135680957?e=2147483647&v=beta&t=Uy-QahZpAKdD8K4knafIoEbTtCNfI1Euij-7h-3qef8",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/course-ec9a34e0ebaf1cb94276eaf60d747423e19bba10c8688c062a5e57eae1f1ecb7",
+        },
+      ],
     },
     {
-      title: "Leading Responsible AI in Organizations",
-      thumbnail: "https://media.licdn.com/dms/image/v2/D4D0DAQGAzr3RwcnrGg/learning-public-crop_288_512/learning-public-crop_288_512/0/1707874444981?e=2147483647&v=beta&t=0dHb-cHyuuzfHITeWBBDpxFFbApU2Mi-vQaubZtwS4o",
-      destination: TODO_DESTINATION,
+      id: "ai-strategy",
+      heading: "AI Transformation, Strategy & Governance",
+      introduction: "Identify priority opportunities for AI initiatives and build plans to operationalize them.",
+      items: [
+        {
+          title: "Transform your business with AI",
+          thumbnail: "https://learn.microsoft.com/training/achievements/transform-your-business-with-microsoft-ai.svg",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-6f4efa500fbe59ba5622f2caf47530375ac5c21fa7abc0ac6a3ec1716c62b401",
+        },
+        {
+          title: "Drive business value with AI solutions",
+          thumbnail: "https://learn.microsoft.com/training/achievements/generic-trophy.svg",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-51edbd91355277c33de1ecd59d0d526ace6d39f498798c752aa0366867846d62",
+        },
+        {
+          title: "Define a Microsoft AI strategy to create business value in finance",
+          thumbnail: "https://learn.microsoft.com/training/achievements/define-microsoft-ai-strategy-finance.svg",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/module-7af8423c2429f2f3ce26f7513d2345eb2516193328de2661b77d97814907dd97",
+        },
+        {
+          title: "Define a Microsoft AI strategy to create business value in retail",
+          thumbnail: "https://learn.microsoft.com/training/achievements/generic-badge.svg",
+          destination: "https://aiskillsnavigator.microsoft.com/explore/search/module-f044740fcdb84202da1a1273148bf97caa012458c2db719e1b597b3b3ffe48d2",
+        },
+      ],
     },
-    {
-      title: "Strengthen Your Decision-Making with Generative AI",
-      thumbnail: "https://media.licdn.com/dms/image/v2/D560DAQH6o0dBpeKeSQ/learning-public-crop_288_512/learning-public-crop_288_512/0/1723241795976?e=2147483647&v=beta&t=dIf0I6LUiETJ8POr5F19PAx1lbOuMATk9MWSxU4_QCc",
-      destination: TODO_DESTINATION,
-    },
-    {
-      title: "Building a Collaborative Team Culture with AI",
-      thumbnail: "https://media.licdn.com/dms/image/v2/D560DAQGacUhVUryqwg/learning-public-crop_288_512/learning-public-crop_288_512/0/1701470880361?e=2147483647&v=beta&t=f9KQVsnHR0hmAjVo3vrTepraCZZd4bOkqA4UEryz5-w",
-      destination: TODO_DESTINATION,
-    },
-  ] satisfies LearningItem[],
+  ] satisfies LearningLane[],
   editorialFeature: {
     eyebrow: "Featured now",
     heading: "From AI experimentation to measurable impact",

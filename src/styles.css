@@ -275,6 +275,10 @@ a.text-cta:hover { text-decoration: underline; }
 .featured-offer,
 .next-steps { border-top: 1px solid var(--cp-border); padding: 56px 48px; }
 .learning-section > .section-heading { margin-bottom: 32px; }
+.playlist-lane + .playlist-lane { border-top: 1px solid var(--cp-border); margin-top: 44px; padding-top: 44px; }
+.playlist-lane-heading { margin-bottom: 20px; max-width: 760px; }
+.playlist-lane-heading h3 { font-size: 24px; margin-bottom: 8px; }
+.playlist-lane-heading p { margin-bottom: 0; }
 .learning-grid { display: grid; gap: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .learning-card { border: 1px solid var(--cp-border); display: flex; flex-direction: column; min-width: 0; }
 .learning-thumbnail { aspect-ratio: 16 / 9; display: block; object-fit: cover; width: 100%; }
