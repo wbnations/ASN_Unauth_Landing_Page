@@ -214,7 +214,7 @@ function App() {
               <p>{executivePage.jtbdSection.introduction}</p>
             </div>
             <div className="jtbd-grid">
-              {executivePage.jtbdGroups.map((group, index) => <JtbdCard group={group} index={index} open={!isMobile || index === 0} key={`${group.heading}-${isMobile}`} />)}
+              {executivePage.jtbdGroups.map((group, index) => <JtbdCard group={group} index={index} open={false} key={`${group.heading}-${isMobile}`} />)}
             </div>
           </section>
 
