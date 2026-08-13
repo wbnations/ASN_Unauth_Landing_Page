@@ -230,7 +230,7 @@ h1 { font-size: clamp(44px, 6vw, 72px); letter-spacing: 0; line-height: .98; mar
   .annotation-body li:nth-child(odd) { padding-right: 0; }
 }
 
-/* Executive audience experience */
+/* Learning experience */
 a:focus-visible,
 summary:focus-visible { outline: 3px solid var(--cp-link); outline-offset: 3px; }
 
@@ -270,28 +270,16 @@ a.text-cta:hover { text-decoration: underline; }
 .button-primary.is-disabled { background: var(--cp-surface-soft); border-color: var(--cp-border); color: var(--cp-text-muted); }
 .button-secondary.is-disabled { background: var(--cp-surface-soft); }
 
-.jtbd-section,
+.learning-section,
 .readiness-section,
 .featured-offer,
 .next-steps { border-top: 1px solid var(--cp-border); padding: 56px 48px; }
-.jtbd-section > .section-heading { margin-bottom: 32px; }
-.jtbd-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
-.jtbd-card { border: 1px solid var(--cp-border); min-width: 0; }
-.jtbd-card[open] { border-color: var(--cp-border-strong); }
-.jtbd-card > summary { align-items: start; cursor: pointer; display: grid; gap: 14px; grid-template-columns: 34px 1fr 20px; list-style: none; min-height: 150px; padding: 22px; }
-.jtbd-card > summary::-webkit-details-marker { display: none; }
-.jtbd-number { color: var(--cp-accent); font-family: Consolas, "Courier New", Courier, monospace; font-size: 13px; font-weight: 700; padding-top: 3px; }
-.jtbd-heading h3 { margin-bottom: 8px; }
-.jtbd-heading > span { color: var(--cp-text-muted); display: block; font-size: 14px; line-height: 1.45; }
-.disclosure-icon { font-size: 20px; transition: transform 180ms ease; }
-.jtbd-card[open] .disclosure-icon { transform: rotate(180deg); }
-.jtbd-body { border-top: 1px solid var(--cp-border); display: grid; gap: 22px; padding: 22px; }
-.recommendation { background: var(--cp-accent-soft); border-left: 4px solid var(--cp-accent); padding: 18px; }
-.recommendation p:last-child { font-size: 14px; margin-bottom: 0; }
-.content-list { list-style: none; margin: 0; padding: 0; }
-.content-list li { align-items: baseline; border-top: 1px solid var(--cp-border); display: flex; font-size: 14px; gap: 12px; justify-content: space-between; line-height: 1.4; padding: 10px 0; }
-.content-list li:last-child { border-bottom: 1px solid var(--cp-border); }
-.content-duration { color: var(--cp-text-muted); flex: none; font-size: 12px; white-space: nowrap; }
+.learning-section > .section-heading { margin-bottom: 32px; }
+.learning-grid { display: grid; gap: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.learning-card { border: 1px solid var(--cp-border); display: flex; flex-direction: column; min-width: 0; }
+.learning-thumbnail { aspect-ratio: 16 / 9; display: block; object-fit: cover; width: 100%; }
+.learning-card-body { display: flex; flex: 1; flex-direction: column; padding: 20px; }
+.learning-card-body h3 { flex: 1; margin-bottom: 24px; }
 
 .editorial-feature { background: var(--cp-bg-elevated); border-top: 1px solid var(--cp-border); display: grid; gap: 40px; grid-template-columns: 1.2fr .8fr; padding: 56px 48px; }
 .editorial-copy > p:not(.eyebrow) { font-size: 17px; max-width: 720px; }
@@ -319,7 +307,7 @@ a.text-cta:hover { text-decoration: underline; }
 @media (max-width: 900px) {
   .executive-hero { gap: 32px; grid-template-columns: 1fr; min-height: auto; padding: 56px 36px; }
   .executive-hero-media { justify-self: center; transform: none; }
-  .jtbd-grid { grid-template-columns: 1fr; }
+  .learning-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .editorial-feature,
   .readiness-section,
   .featured-offer { grid-template-columns: 1fr; }
@@ -338,15 +326,12 @@ a.text-cta:hover { text-decoration: underline; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .button-primary,
   .button-secondary { width: 100%; }
-  .jtbd-section,
+  .learning-section,
   .readiness-section,
   .featured-offer,
   .next-steps,
   .editorial-feature { padding: 42px 20px; }
-  .jtbd-card > summary { grid-template-columns: 28px 1fr 18px; min-height: 0; padding: 18px 16px; }
-  .jtbd-heading > span { display: none; }
-  .jtbd-heading h3 { font-size: 17px; margin: 0; }
-  .jtbd-body { padding: 16px; }
+  .learning-grid { grid-template-columns: 1fr; }
   .offer-detail { grid-template-columns: 54px 1fr; }
   .credential-mark { font-size: 18px; height: 54px; width: 54px; }
 }

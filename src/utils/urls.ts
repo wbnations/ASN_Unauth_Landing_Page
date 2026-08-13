@@ -16,7 +16,7 @@ export function buildAsnUrl(destination: string, slug: string, content: string):
 
   const incoming = new URLSearchParams(window.location.search);
   const defaults = {
-    utm_source: "executive_landing_page",
+    utm_source: "learning_landing_page",
     utm_medium: "referral",
     utm_campaign: slug,
     utm_content: content,

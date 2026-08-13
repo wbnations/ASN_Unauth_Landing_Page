@@ -1,10 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { executivePage, type ContentReference, type Destination, type JtbdGroup } from "./data/executive";
+import { executivePage, type Destination, type LearningItem } from "./data/executive";
 import { buildAsnUrl, isAvailableDestination } from "./utils/urls";
 
 const annotations = [
-  { target: "#executive", title: "Executive lane", detail: "Stable audience anchor with unauthenticated positioning and ASN handoff." },
-  { target: "#jtbd", title: "JTBD groups", detail: "Four leadership challenges organize verified playlists and learning titles." },
+  { target: "#learning", title: "Featured playlists", detail: "Four featured playlists use production learning thumbnails and direct ASN handoffs." },
   { target: "#editorial", title: "Editorial feature", detail: "A replaceable timely feature driven entirely by the content model." },
   { target: "#readiness", title: "Readiness checklist", detail: "A non-interactive prompt list with no scoring, storage, forms, or data capture." },
   { target: "#credential", title: "Featured offer", detail: "The verified AI Transformation Leader credential destination." },
@@ -41,40 +40,15 @@ function TrackedAsnLink({ destination, content, children, ...props }: {
   return <a {...props} href={buildAsnUrl(destination, executivePage.slug, content)}>{children}</a>;
 }
 
-function ContentList({ items }: { items: readonly ContentReference[] }) {
+function LearningCard({ item, index }: { item: LearningItem; index: number }) {
   return (
-    <ul className="content-list">
-      {items.map((item) => (
-        <li key={item.title}>
-          <span>{item.title}</span>
-          {item.duration && <span className="content-duration">{item.duration}</span>}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function JtbdCard({ group, index, open }: { group: JtbdGroup; index: number; open: boolean }) {
-  return (
-    <details className="jtbd-card" open={open}>
-      <summary>
-        <span className="jtbd-number" aria-hidden="true">0{index + 1}</span>
-        <span className="jtbd-heading"><h3>{group.heading}</h3><span>{group.description}</span></span>
-        <span className="disclosure-icon" aria-hidden="true">⌄</span>
-      </summary>
-      <div className="jtbd-body">
-        <div className="recommendation">
-          <p className="section-label">{group.recommendationType}</p>
-          <h4>{group.playlist.title}</h4>
-          <p>{group.playlist.description}</p>
-        </div>
-        <div>
-          <p className="section-label">{executivePage.labels.relevantContent}</p>
-          <ContentList items={group.relevantContent} />
-        </div>
-        <ActionLink className="text-cta" content={`jtbd_${index + 1}`} destination={group.cta.destination} label={group.cta.label} />
+    <article className="learning-card">
+      <img className="learning-thumbnail" src={item.thumbnail} alt="" />
+      <div className="learning-card-body">
+        <h3>{item.title}</h3>
+        <ActionLink className="text-cta" content={`featured_learning_${index + 1}`} destination={item.destination} label="View playlist" />
       </div>
-    </details>
+    </article>
   );
 }
 
@@ -194,9 +168,8 @@ function App() {
 
       <div className="review-layout">
         <main>
-          <section className="executive-hero" id={executivePage.slug} aria-labelledby="page-title">
+          <section className="executive-hero" aria-labelledby="page-title">
             <div className="hero-copy">
-              <p className="eyebrow">{executivePage.audience}</p>
               <h1 id="page-title">{executivePage.title}</h1>
               <p className="hero-description">{executivePage.description}</p>
               <div className="hero-actions">
@@ -213,13 +186,13 @@ function App() {
             </div>
           </section>
 
-          <section className="jtbd-section" id="jtbd" aria-labelledby="jtbd-heading">
+          <section className="learning-section" id="learning" aria-labelledby="learning-heading">
             <div className="section-heading">
-              <h2 id="jtbd-heading">{executivePage.jtbdSection.heading}</h2>
-              <p>{executivePage.jtbdSection.introduction}</p>
+              <h2 id="learning-heading">{executivePage.learningSection.heading}</h2>
+              <p>{executivePage.learningSection.introduction}</p>
             </div>
-            <div className="jtbd-grid">
-              {executivePage.jtbdGroups.map((group, index) => <JtbdCard group={group} index={index} open={false} key={`${group.heading}-${isMobile}`} />)}
+            <div className="learning-grid">
+              {executivePage.learningItems.map((item, index) => <LearningCard item={item} index={index} key={item.title} />)}
             </div>
           </section>
 
