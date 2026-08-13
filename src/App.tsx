@@ -1,91 +1,151 @@
-import { useEffect, useState } from "react";
-
-type ContentItem = {
-  type: "Playlist" | "Session";
-  title: string;
-  description: string;
-  duration: string;
-  artwork: string;
-};
-
-type Lane = {
-  id: string;
-  label: string;
-  title: string;
-  items: ContentItem[];
-};
-
-const lanes: Lane[] = [
-  {
-    id: "leadership",
-    label: "Conversation A",
-    title: "Lead your organization into the AI era",
-    items: [
-      { type: "Playlist", title: "AI transformation for leaders", description: "Build an actionable strategy for responsible, organization-wide AI adoption.", duration: "2h 15m", artwork: "strategy" },
-      { type: "Playlist", title: "Accelerate business value with AI", description: "Turn priority scenarios into measurable outcomes with a practical leadership plan.", duration: "1h 30m", artwork: "value" },
-      { type: "Session", title: "The AI-ready organization", description: "Learn the operating model, culture, and skills that support durable AI change.", duration: "45m", artwork: "organization" },
-      { type: "Session", title: "Responsible AI in practice", description: "Move from principles to governance patterns your teams can use today.", duration: "30m", artwork: "responsible" },
-    ],
-  },
-  {
-    id: "building",
-    label: "Conversation B",
-    title: "Build and ship secure AI experiences",
-    items: [
-      { type: "Playlist", title: "Create intelligent apps", description: "Explore the core tools and patterns behind production-ready AI applications.", duration: "1h 45m", artwork: "apps" },
-      { type: "Playlist", title: "Develop copilots with confidence", description: "Design, ground, evaluate, and improve copilots for real business scenarios.", duration: "2h 10m", artwork: "copilots" },
-      { type: "Session", title: "Secure AI from the start", description: "Apply identity, data, and threat protection throughout the AI lifecycle.", duration: "50m", artwork: "security" },
-      { type: "Session", title: "From prototype to production", description: "Use evaluation and observability to ship reliable AI experiences at scale.", duration: "35m", artwork: "production" },
-    ],
-  },
-];
+import { useEffect, useState, type ReactNode } from "react";
+import { executivePage, type ContentReference, type Destination, type JtbdGroup } from "./data/executive";
+import { buildAsnUrl, isAvailableDestination } from "./utils/urls";
 
 const annotations = [
-  { target: "#hero", title: "Hero", detail: "Unauthenticated landing. Sign-in is prompted when a visitor starts content." },
-  { target: "#leadership", title: "Lane heading (anchor)", detail: "Each lane has its own anchor target for deep linking. Campaign parameters should persist through to content clicks." },
-  { target: "#leadership-content", title: "Content grid", detail: "Multiple playlists and sessions per lane. Each item is independently linkable and can be swapped without new intake." },
-  { target: "#next-leadership", title: "Lane CTA", detail: "One primary next step per lane in the MVP. Additional calls to action can follow later." },
-  { target: "#building", title: "Repeat for second lane", detail: "The same content structure repeats for the second conversation on the page." },
-  { target: "#site-footer", title: "Footer", detail: "Standard Microsoft legal links. This is part of the production shell, not an MVP requirement." },
+  { target: "#executive", title: "Executive lane", detail: "Stable audience anchor with unauthenticated positioning and ASN handoff." },
+  { target: "#jtbd", title: "JTBD groups", detail: "Four leadership challenges organize verified playlists and learning titles." },
+  { target: "#editorial", title: "Editorial feature", detail: "A replaceable timely feature driven entirely by the content model." },
+  { target: "#readiness", title: "Readiness checklist", detail: "A non-interactive prompt list with no scoring, storage, forms, or data capture." },
+  { target: "#credential", title: "Featured offer", detail: "The verified AI Transformation Leader credential destination." },
+  { target: "#next-steps", title: "One Microsoft next steps", detail: "Cross-Microsoft actions stay disabled until approved URLs are supplied." },
 ];
 
 function ArrowIcon() {
   return <span aria-hidden="true">→</span>;
 }
 
-function ContentCard({ item }: { item: ContentItem }) {
+function ActionLink({ destination, label, content, className }: {
+  destination: Destination;
+  label: string;
+  content: string;
+  className: string;
+}) {
+  if (!isAvailableDestination(destination)) {
+    return <span className={`${className} is-disabled`} aria-disabled="true">{label}</span>;
+  }
+
+  const href = destination.startsWith("#")
+    ? destination
+    : buildAsnUrl(destination, executivePage.slug, content);
+  return <a className={className} href={href}>{label} <ArrowIcon /></a>;
+}
+
+function TrackedAsnLink({ destination, content, children, ...props }: {
+  destination: string;
+  content: string;
+  children: ReactNode;
+  className?: string;
+  "aria-label"?: string;
+}) {
+  return <a {...props} href={buildAsnUrl(destination, executivePage.slug, content)}>{children}</a>;
+}
+
+function ContentList({ items }: { items: readonly ContentReference[] }) {
   return (
-    <a className="content-card" href={`#${item.artwork}`} aria-label={`View ${item.type.toLowerCase()}: ${item.title}`}>
-      <div className={`card-art card-art-${item.artwork}`} aria-hidden="true"><span /><span /><span /></div>
-      <div className="card-body">
-        <p className="content-type">{item.type}</p>
-        <h3>{item.title}</h3>
-        <p className="card-description">{item.description}</p>
-        <div className="card-meta">
-          <span className="duration"><span aria-hidden="true">◷</span> {item.duration}</span>
-          <span className="card-link">View {item.type.toLowerCase()} <ArrowIcon /></span>
-        </div>
-      </div>
-    </a>
+    <ul className="content-list">
+      {items.map((item) => (
+        <li key={item.title}>
+          <span>{item.title}</span>
+          {item.duration && <span className="content-duration">{item.duration}</span>}
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function ConversationLane({ lane, open }: { lane: Lane; open: boolean }) {
+function JtbdCard({ group, index, open }: { group: JtbdGroup; index: number; open: boolean }) {
   return (
-    <details className="lane" id={lane.id} open={open}>
-      <summary className="lane-heading">
-        <span className="anchor-icon" aria-hidden="true">⌁</span>
-        <span className="lane-label">{lane.label}</span>
-        <h2>{lane.title}</h2>
-        <span className="lane-chevron" aria-hidden="true">⌄</span>
+    <details className="jtbd-card" open={open}>
+      <summary>
+        <span className="jtbd-number" aria-hidden="true">0{index + 1}</span>
+        <span className="jtbd-heading"><h3>{group.heading}</h3><span>{group.description}</span></span>
+        <span className="disclosure-icon" aria-hidden="true">⌄</span>
       </summary>
-      <div className="lane-content" id={`${lane.id}-content`}>
-        <div className="content-grid">
-          {lane.items.map((item) => <ContentCard item={item} key={item.title} />)}
+      <div className="jtbd-body">
+        <div className="recommendation">
+          <p className="section-label">{group.recommendationType}</p>
+          <h4>{group.playlist.title}</h4>
+          <p>{group.playlist.description}</p>
         </div>
-        <a className="lane-cta" id={`next-${lane.id}`} href={`#next-${lane.id}`}>Explore next steps for this conversation <ArrowIcon /></a>
+        <div>
+          <p className="section-label">{executivePage.labels.relevantContent}</p>
+          <ContentList items={group.relevantContent} />
+        </div>
+        <ActionLink className="text-cta" content={`jtbd_${index + 1}`} destination={group.cta.destination} label={group.cta.label} />
       </div>
     </details>
+  );
+}
+
+function EditorialFeature() {
+  const feature = executivePage.editorialFeature;
+  return (
+    <section className="editorial-feature" id="editorial" aria-labelledby="editorial-heading">
+      <div className="editorial-copy">
+        <p className="eyebrow">{feature.eyebrow}</p>
+        <h2 id="editorial-heading">{feature.heading}</h2>
+        {feature.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      </div>
+      <div className="featured-content">
+        <p className="section-label">{executivePage.labels.featuredContent}</p>
+        <h3>{feature.featuredContent}</h3>
+        <p className="feature-duration"><span aria-hidden="true">◷</span> {feature.duration}</p>
+        <ActionLink className="text-cta" content="editorial_feature" destination={feature.cta.destination} label={feature.cta.label} />
+      </div>
+    </section>
+  );
+}
+
+function ReadinessChecklist() {
+  const checklist = executivePage.readinessChecklist;
+  return (
+    <section className="readiness-section" id="readiness" aria-labelledby="readiness-heading">
+      <div className="section-heading">
+        <h2 id="readiness-heading">{checklist.heading}</h2>
+        <p>{checklist.introduction}</p>
+      </div>
+      <ul className="readiness-list">
+        {checklist.items.map((item) => <li key={item}><span aria-hidden="true">✓</span>{item}</li>)}
+      </ul>
+      <ActionLink className="button-secondary" content="readiness_checklist" destination={checklist.cta.destination} label={checklist.cta.label} />
+    </section>
+  );
+}
+
+function FeaturedOffer() {
+  const offer = executivePage.featuredOffer;
+  return (
+    <section className="featured-offer" id="credential" aria-labelledby="offer-heading">
+      <div><p className="eyebrow">{offer.eyebrow}</p><h2 id="offer-heading">{offer.heading}</h2></div>
+      <div className="offer-detail">
+        <span className="credential-mark" aria-hidden="true">AI</span>
+        <div>
+          <h3>{offer.offer}</h3>
+          <p>{offer.description}</p>
+          <ActionLink className="text-cta" content="featured_credential" destination={offer.cta.destination} label={offer.cta.label} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function NextSteps() {
+  const nextSteps = executivePage.nextSteps;
+  return (
+    <section className="next-steps" id="next-steps" aria-labelledby="next-steps-heading">
+      <h2 id="next-steps-heading">{nextSteps.heading}</h2>
+      <div className="next-step-grid">
+        {nextSteps.cards.map((card, index) => (
+          <article className="next-step-card" key={card.title}>
+            <span className="step-index" aria-hidden="true">0{index + 1}</span>
+            <h3>{card.title}</h3>
+            <p>{card.description}</p>
+            <ActionLink className="text-cta" content={`next_step_${index + 1}`} destination={card.cta.destination} label={card.cta.label} />
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -93,10 +153,7 @@ function AnnotationRail({ open }: { open: boolean }) {
   return (
     <aside className="annotation-rail" aria-label="Prototype annotations">
       <details className="annotation-panel" open={open} key={String(open)}>
-        <summary>
-          <span>Prototype annotations</span>
-          <span className="annotation-toggle" aria-hidden="true">⌄</span>
-        </summary>
+        <summary><span>Prototype annotations</span><span className="annotation-toggle" aria-hidden="true">⌄</span></summary>
         <div className="annotation-body">
           <p className="annotation-kicker">Review layer — not site copy</p>
           <ol>
@@ -104,10 +161,7 @@ function AnnotationRail({ open }: { open: boolean }) {
               <li key={annotation.title}>
                 <a href={annotation.target} aria-label={`Go to annotation ${index + 1}: ${annotation.title}`}>
                   <span className="annotation-number" aria-hidden="true">{index + 1}</span>
-                  <span>
-                    <strong>{annotation.title}</strong>
-                    <span>{annotation.detail}</span>
-                  </span>
+                  <span><strong>{annotation.title}</strong><span>{annotation.detail}</span></span>
                 </a>
               </li>
             ))}
@@ -131,34 +185,45 @@ function App() {
   return (
     <div className="app-shell">
       <header className="site-header">
-        <a className="site-brand" href="https://aiskillsnavigator.microsoft.com/" aria-label="AI Skills Navigator home">
+        <TrackedAsnLink className="site-brand" content="global_brand" destination="https://aiskillsnavigator.microsoft.com/" aria-label="AI Skills Navigator home">
           <img src="https://aiskillsnavigator.microsoft.com/assets/Microsoft-logo-DrxmtfFd.svg" alt="Microsoft logo" />
-          <span className="brand-divider" aria-hidden="true" />
-          <span>AI Skills Navigator</span>
-        </a>
-        <a className="sign-in" href="https://aiskillsnavigator.microsoft.com/">Sign in</a>
+          <span className="brand-divider" aria-hidden="true" /><span>AI Skills Navigator</span>
+        </TrackedAsnLink>
+        <TrackedAsnLink className="sign-in" content="global_sign_in" destination="https://aiskillsnavigator.microsoft.com/">Sign in</TrackedAsnLink>
       </header>
 
       <div className="review-layout">
-      <main>
-        <section className="hero" id="hero" aria-labelledby="page-title">
-          <div className="hero-copy">
-            <p className="eyebrow">AI Skills Navigator</p>
-            <h1 id="page-title">Start your AI skilling journey</h1>
-            <p className="hero-subtitle">Choose a conversation, explore hand-picked learning, and build the skills to put AI to work.</p>
-            <a className="button-primary" href="#leadership">Start learning <ArrowIcon /></a>
-          </div>
-          <div className="hero-art" aria-hidden="true"><span /><span /><span /></div>
-        </section>
+        <main>
+          <section className="executive-hero" id={executivePage.slug} aria-labelledby="page-title">
+            <div className="hero-copy">
+              <p className="eyebrow">{executivePage.audience}</p>
+              <h1 id="page-title">{executivePage.title}</h1>
+              <p className="hero-description">{executivePage.description}</p>
+              <div className="hero-actions">
+                <ActionLink className="button-primary" content="hero_primary" destination={executivePage.primaryCTA.destination} label={executivePage.primaryCTA.label} />
+                <ActionLink className="button-secondary" content="hero_secondary" destination={executivePage.secondaryCTA.destination} label={executivePage.secondaryCTA.label} />
+              </div>
+              <p className="supporting-copy">{executivePage.supportingCopy}</p>
+            </div>
+            <div className="hero-art" aria-hidden="true"><span /><span /><span /></div>
+          </section>
 
-        <div className="lanes" aria-label="Learning conversations">
-          {lanes.map((lane, index) => (
-            <ConversationLane lane={lane} open={!isMobile || index === 0} key={`${lane.id}-${isMobile}`} />
-          ))}
-        </div>
-      </main>
+          <section className="jtbd-section" id="jtbd" aria-labelledby="jtbd-heading">
+            <div className="section-heading">
+              <h2 id="jtbd-heading">{executivePage.jtbdSection.heading}</h2>
+              <p>{executivePage.jtbdSection.introduction}</p>
+            </div>
+            <div className="jtbd-grid">
+              {executivePage.jtbdGroups.map((group, index) => <JtbdCard group={group} index={index} open={!isMobile || index === 0} key={`${group.heading}-${isMobile}`} />)}
+            </div>
+          </section>
 
-      <AnnotationRail open={!isMobile} />
+          <EditorialFeature />
+          <ReadinessChecklist />
+          <FeaturedOffer />
+          <NextSteps />
+        </main>
+        <AnnotationRail open={!isMobile} />
       </div>
 
       <footer className="site-footer" id="site-footer">
@@ -166,7 +231,7 @@ function App() {
           <a href="https://go.microsoft.com/fwlink/?LinkId=521839">Privacy &amp; Cookies</a>
           <a href="https://go.microsoft.com/fwlink/?linkid=2259814">Consumer Health Privacy</a>
           <a href="https://aka.ms/YourCaliforniaPrivacyChoices">Your Privacy Choices</a>
-          <a href="https://aiskillsnavigator.microsoft.com/termsofuse">Terms of Use</a>
+          <TrackedAsnLink content="footer_terms" destination="https://aiskillsnavigator.microsoft.com/termsofuse">Terms of Use</TrackedAsnLink>
           <a href="https://www.microsoft.com/legal/intellectualproperty/Trademarks/">Trademark</a>
           <a href="https://aka.ms/VoiceOfTheCustomer_AISkillsNavigator">Provide feedback</a>
         </nav>
