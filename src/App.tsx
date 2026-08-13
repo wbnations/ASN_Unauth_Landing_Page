@@ -205,7 +205,12 @@ function App() {
               </div>
               <p className="supporting-copy">{executivePage.supportingCopy}</p>
             </div>
-            <div className="hero-art" aria-hidden="true"><span /><span /><span /></div>
+            <div className="executive-hero-media">
+              <img
+                src="https://media.licdn.com/dms/image/v2/C4D0DAQHsCAbXLw-NOw/learning-public-crop_288_512/learning-public-crop_288_512/0/1678753390059?e=2147483647&v=beta&t=ttFyJOm1yoIp0N3bkjYXdgpbu7Xt_q-iMv-bdfuOJVk"
+                alt="Business leader presenting against an AI-themed backdrop"
+              />
+            </div>
           </section>
 
           <section className="jtbd-section" id="jtbd" aria-labelledby="jtbd-heading">
