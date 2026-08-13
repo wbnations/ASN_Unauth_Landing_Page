@@ -40,6 +40,15 @@ const lanes: Lane[] = [
   },
 ];
 
+const annotations = [
+  { target: "#hero", title: "Hero", detail: "Unauthenticated landing. Sign-in is prompted when a visitor starts content." },
+  { target: "#leadership", title: "Lane heading (anchor)", detail: "Each lane has its own anchor target for deep linking. Campaign parameters should persist through to content clicks." },
+  { target: "#leadership-content", title: "Content grid", detail: "Multiple playlists and sessions per lane. Each item is independently linkable and can be swapped without new intake." },
+  { target: "#next-leadership", title: "Lane CTA", detail: "One primary next step per lane in the MVP. Additional calls to action can follow later." },
+  { target: "#building", title: "Repeat for second lane", detail: "The same content structure repeats for the second conversation on the page." },
+  { target: "#site-footer", title: "Footer", detail: "Standard Microsoft legal links. This is part of the production shell, not an MVP requirement." },
+];
+
 function ArrowIcon() {
   return <span aria-hidden="true">→</span>;
 }
@@ -70,13 +79,42 @@ function ConversationLane({ lane, open }: { lane: Lane; open: boolean }) {
         <h2>{lane.title}</h2>
         <span className="lane-chevron" aria-hidden="true">⌄</span>
       </summary>
-      <div className="lane-content">
+      <div className="lane-content" id={`${lane.id}-content`}>
         <div className="content-grid">
           {lane.items.map((item) => <ContentCard item={item} key={item.title} />)}
         </div>
-        <a className="lane-cta" href={`#next-${lane.id}`}>Explore next steps for this conversation <ArrowIcon /></a>
+        <a className="lane-cta" id={`next-${lane.id}`} href={`#next-${lane.id}`}>Explore next steps for this conversation <ArrowIcon /></a>
       </div>
     </details>
+  );
+}
+
+function AnnotationRail({ open }: { open: boolean }) {
+  return (
+    <aside className="annotation-rail" aria-label="Prototype annotations">
+      <details className="annotation-panel" open={open} key={String(open)}>
+        <summary>
+          <span>Prototype annotations</span>
+          <span className="annotation-toggle" aria-hidden="true">⌄</span>
+        </summary>
+        <div className="annotation-body">
+          <p className="annotation-kicker">Review layer — not site copy</p>
+          <ol>
+            {annotations.map((annotation, index) => (
+              <li key={annotation.title}>
+                <a href={annotation.target} aria-label={`Go to annotation ${index + 1}: ${annotation.title}`}>
+                  <span className="annotation-number" aria-hidden="true">{index + 1}</span>
+                  <span>
+                    <strong>{annotation.title}</strong>
+                    <span>{annotation.detail}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </details>
+    </aside>
   );
 }
 
@@ -101,8 +139,9 @@ function App() {
         <a className="sign-in" href="https://aiskillsnavigator.microsoft.com/">Sign in</a>
       </header>
 
+      <div className="review-layout">
       <main>
-        <section className="hero" aria-labelledby="page-title">
+        <section className="hero" id="hero" aria-labelledby="page-title">
           <div className="hero-copy">
             <p className="eyebrow">AI Skills Navigator</p>
             <h1 id="page-title">Start your AI skilling journey</h1>
@@ -119,7 +158,10 @@ function App() {
         </div>
       </main>
 
-      <footer className="site-footer">
+      <AnnotationRail open={!isMobile} />
+      </div>
+
+      <footer className="site-footer" id="site-footer">
         <nav aria-label="Microsoft legal links">
           <a href="https://go.microsoft.com/fwlink/?LinkId=521839">Privacy &amp; Cookies</a>
           <a href="https://go.microsoft.com/fwlink/?linkid=2259814">Consumer Health Privacy</a>
